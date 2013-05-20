@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<style type="text/css">
+    #discussion {
+        display: block;
+        float: left;
+        width: 200px;
+        list-style: none;
+    }
+
+    #sensor {
+        display: block;
+        float: left;
+        width: 200px;
+        list-style: none;
+        z-index: 100;
+    }
+
+    .sensor {
+        width: 50px;
+        height: 50px;
+        display: block;
+        position: absolute;
+    }
+
+    #sensor1 {
+        left: 100px;
+        top: 200px;
+    }
+
+    #sensor2 {
+        left: 600px;
+        top: 400px;
+    }
+
+    #sensor3 {
+        left: 750px;
+        top: 200px;
+    }
+
+    #sensor4 {
+        left: 100px;
+        top: 400px;
+    }
+
+    #sensor5 {
+        left: 450px;
+        top: 500px;
+    }
+
+    #sensor6 {
+        left: 900px;
+        top: 300px;
+    }
+
+    #sensor7 {
+        left: 150px;
+        top: 200px;
+    }
+
+    #sensor8 {
+        left: 50px;
+        top: 680px;
+    }
+
+    #sensor9 {
+        left: 350px;
+        top: 350px;
+    }
+
+    #sensor10 {
+        left: 550px;
+        top: 400px;
+    }
+</style>
+
+<button id="sendmessage">client sending to signalr</button>
+<ul id="discussion">
+</ul>
+<ul id="sensor">
+</ul>
+
+<div id="sensor1" class="sensor">&nbsp;</div>
+<div id="sensor2" class="sensor"></div>
+<div id="sensor3" class="sensor"></div>
+<div id="sensor4" class="sensor"></div>
+<div id="sensor5" class="sensor"></div>
+<div id="sensor6" class="sensor"></div>
+<div id="sensor7" class="sensor"></div>
+<div id="sensor8" class="sensor"></div>
+<div id="sensor9" class="sensor"></div>
+<div id="sensor10" class="sensor"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var hub = $.connection.demoHub;
+
+        hub.client.ping = function (name, message) {
+            $('#discussion').prepend('<li>' + name + ' : ' + message + '</li>');
+        };
+
+        hub.client.sensor = function (sensorId) {
+            $('#sensor').prepend('<li> heartbeat for sensor ID ' + sensorId + '</li>');
+
+            $('.sensor').each(function () {
+                $(this).animate({ backgroundColor: "transparent" }, "slow");
+            });
+            $('#sensor' + sensorId).animate({ backgroundColor: "red" }, "slow");
+        };
+
+        $.connection.hub.start().done(function () {
+            $('#sendmessage').click(function () {
+                hub.server.send('html client', 'hello world');
+            });
+        });
+    });
+</script>
+
+
